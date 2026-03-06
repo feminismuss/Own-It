@@ -12,9 +12,9 @@ Blick zu behalten.
 - Status eines Todos setzen: To Do, In Progress oder Done
 - Projekte: Jedes Projekt hat eine eigene Todo-Liste
 - Projekte anlegen, editieren und löschen
-- Login: Nutzer können sich registrieren und einloggen
 
 ### Nice to Have
+- Login: Nutzer können sich registrieren und einloggen
 - Kanban-Ansicht mit Drag & Drop
 - Projekten per Invite-Link joinen
 - "Ich mach das!" – Aufgabe übernehmen und automatisch in In Progress setzen
