@@ -12,12 +12,12 @@ export default function Home() {
   if (isLoading || !tasks) return <h1>Loading...</h1>;
 
   return (
-      <TaskList>
+    <TaskList>
       <TaskForm />
-        {tasks.map((task) => (
-          <TaskCard key={task._id} task={task} />
-        ))}
-      </TaskList>
+      {tasks.map((task) => (
+        <TaskCard key={task._id} task={task} />
+      ))}
+    </TaskList>
   );
 }
 
