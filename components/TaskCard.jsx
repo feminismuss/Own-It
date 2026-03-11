@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 
-export default function TaskCard({ task }) {
+export default function TaskCard({ task, onDelete, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
 
   if (isEditing) {
@@ -12,7 +12,7 @@ export default function TaskCard({ task }) {
     <div>
       <p>{task.title}</p>
       <button onClick={() => setIsEditing(true)}>Edit</button>
-      <button>Delete</button>
+      <button onClick={() => onDelete(task._id)}>Delete</button>
     </div>
   );
 }

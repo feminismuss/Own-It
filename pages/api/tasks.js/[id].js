@@ -5,6 +5,17 @@ export default async function handler(request, response) {
   await dbConnect();
   const { id } = request.query;
 
+  if (request.method === "GET") {
+    try {
+      const task = await Task.findById(id);
+      response.status(200).json(task);
+      return;
+    } catch (error) {
+      response.status(500).json({ error: error.message });
+      return;
+    }
+  }
+
   if (request.method === "PUT") {
     try {
       const taskData = request.body;
