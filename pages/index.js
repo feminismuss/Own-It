@@ -3,6 +3,7 @@ import styled from "styled-components";
 import TaskCard from "@/components/TaskCard";
 import useSWR from "swr";
 import { deleteTask, updateTask } from "@/services/taskService";
+import TaskForm from "@/components/TaskForm";
 
 export default function Home() {
   const { data: tasks, isLoading, error } = useSWR("/api/tasks");
@@ -11,11 +12,12 @@ export default function Home() {
   if (isLoading || !tasks) return <h1>Loading...</h1>;
 
   return (
-    <TaskList>
-      {tasks.map((task) => (
-        <TaskCard key={task._id} task={task} />
-      ))}
-    </TaskList>
+      <TaskList>
+      <TaskForm />
+        {tasks.map((task) => (
+          <TaskCard key={task._id} task={task} />
+        ))}
+      </TaskList>
   );
 }
 
