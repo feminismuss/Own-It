@@ -19,6 +19,7 @@ export default function TaskPage() {
 
   async function handleUpdate(id, data) {
     await updateTask(id, data);
+    router.push("/");
   }
 
   if (error) {
