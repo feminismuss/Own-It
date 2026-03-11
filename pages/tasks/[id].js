@@ -14,6 +14,7 @@ export default function TaskPage() {
 
   async function handleDelete(id) {
     await deleteTask(id);
+    router.push("/");
   }
 
   async function handleUpdate(id, data) {

@@ -14,8 +14,9 @@ export default createGlobalStyle`
     min-height: 100vh;
     margin: 0;
     padding: 0;
+    background: ${({ theme }) => theme.colors.bg};
 
-    font-family: 'Quicksand', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
