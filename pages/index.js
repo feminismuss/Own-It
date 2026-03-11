@@ -2,7 +2,7 @@ import Head from "next/head";
 import styled from "styled-components";
 import TaskCard from "@/components/TaskCard";
 import useSWR from "swr";
-import { deleteTask, updateTask } from "@/services/taskService";
+import { createTask } from "@/services/taskService";
 import TaskForm from "@/components/TaskForm";
 
 export default function Home() {
@@ -13,7 +13,6 @@ export default function Home() {
 
   return (
     <TaskList>
-      <TaskForm />
       {tasks.map((task) => (
         <TaskCard key={task._id} task={task} />
       ))}

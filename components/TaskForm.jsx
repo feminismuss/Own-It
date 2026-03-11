@@ -8,12 +8,11 @@ export default function TaskForm({ task, onUpdate, onCreate, onClose }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
     if (isEditMode) {
-      await onUpdate(task._id, data);
+      await onUpdate(task._id, { title });
     } else {
-      await onCreate(data);
+      await onCreate({ title });
+      setTitle("");
     }
     onClose();
   }
