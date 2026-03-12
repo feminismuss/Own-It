@@ -1,9 +1,7 @@
-import Head from "next/head";
 import styled from "styled-components";
 import TaskCard from "@/components/TaskCard";
 import useSWR from "swr";
-import { createTask } from "@/services/taskService";
-import TaskForm from "@/components/TaskForm";
+import { updateTask } from "@/services/taskService";
 
 export default function Home() {
   const { data: tasks, isLoading, error } = useSWR("/api/tasks");
@@ -11,10 +9,19 @@ export default function Home() {
   if (error) return <div>Fehler beim Laden: {error.message}</div>;
   if (isLoading || !tasks) return <h1>Loading...</h1>;
 
+  async function handleUpdate(id, data) {
+    await updateTask(id, data);
+  }
+
   return (
     <TaskList>
       {tasks.map((task) => (
-        <TaskCard key={task._id} task={task} />
+        <TaskCard
+          key={task._id}
+          task={task}
+          onUpdate={handleUpdate}
+          showStatusButton
+        />
       ))}
     </TaskList>
   );

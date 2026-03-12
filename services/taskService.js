@@ -31,6 +31,7 @@ export async function updateTask(id, data) {
       return;
     }
     await mutate(`${API_TASKS}/${id}`);
+    await mutate(API_TASKS);
   } catch (error) {
     console.error("Error updating", error);
   }
