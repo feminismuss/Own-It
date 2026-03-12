@@ -1,52 +1,52 @@
 import { mutate } from "swr";
 
-export const API_TASKS = "/api/tasks";
+export const API_PLANS = "/api/plans";
 
-export async function createTask(data) {
+export async function createPlan(data) {
   try {
-    const response = await fetch(API_TASKS, {
+    const response = await fetch(API_PLANS, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
     if (!response.ok) {
-      console.error("Error creating task", response.statusText);
+      console.error("Error creating plan", response.statusText);
       return;
     }
-    await mutate(API_TASKS);
-    await mutate(`${API_TASKS}?planId=${data.plan}`);
+    await mutate(API_PLANS);
   } catch (error) {
     console.error("Error creating", error);
   }
 }
 
-export async function updateTask(id, data) {
+export async function updatePlan(id, data) {
   try {
-    const response = await fetch(`${API_TASKS}/${id}`, {
+    const response = await fetch(`${API_PLANS}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...data }),
     });
     if (!response.ok) {
-      console.error("Error updating task", response.statusText);
+      console.error("Error updating plan", response.statusText);
       return;
     }
-    await mutate(`${API_TASKS}/${id}`);
+    await mutate(`${API_PLANS}/${id}`);
+    await mutate(API_PLANS);
   } catch (error) {
     console.error("Error updating", error);
   }
 }
 
-export async function deleteTask(id) {
+export async function deletePlan(id) {
   try {
-    const response = await fetch(`${API_TASKS}/${id}`, {
+    const response = await fetch(`${API_PLANS}/${id}`, {
       method: "DELETE",
     });
     if (!response.ok) {
-      console.error("Error deleting task", response.statusText);
+      console.error("Error deleting plan", response.statusText);
       return;
     }
-    await mutate(API_TASKS);
+    await mutate(API_PLANS);
   } catch (error) {
     console.error("Error deleting", error);
   }
