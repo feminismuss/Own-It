@@ -1,15 +1,13 @@
 import dbConnect from "@/db/connect";
-import Task from "@/db/models/task";
+import Plan from "@/db/models/plan";
 
 export default async function handler(request, response) {
   await dbConnect();
 
   if (request.method === "GET") {
     try {
-      const { planId } = request.query;
-      const filter = planId ? { plan: planId } : {};
-      const tasks = await Task.find(filter).sort({ createdAt: -1 });
-      response.status(200).json(tasks);
+      const plans = await Plan.find().sort({ createdAt: -1 });
+      response.status(200).json(plans);
       return;
     } catch (error) {
       response.status(500).json({ error: error.message });
@@ -19,9 +17,9 @@ export default async function handler(request, response) {
 
   if (request.method === "POST") {
     try {
-      const taskData = request.body;
-      const taskToCreate = await Task.create(taskData);
-      response.status(201).json(taskToCreate);
+      const planData = request.body;
+      const planToCreate = await Plan.create(planData);
+      response.status(201).json(planToCreate);
     } catch (error) {
       response.status(400).json({ error: error.message });
       return;
