@@ -20,10 +20,10 @@ export const ButtonGroup = styled.div`
 `;
 
 export const StyledButton = styled.button`
-  width: ${({ variant }) => variant === "done" || variant === "start" ? "auto" : "100%"};
+  width: ${({ $variant }) => $variant === "done" || $variant === "start" ? "auto" : "100%"};
   padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
-  background: ${({ variant, theme }) =>
-    variant === "done" ? theme.colors.done : theme.colors.accent};
+  background: ${({ $variant, theme }) =>
+    $variant === "done" ? theme.colors.done : theme.colors.accent};
   color: #fff;
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.sm};

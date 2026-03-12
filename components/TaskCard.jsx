@@ -45,7 +45,7 @@ export default function TaskCard({
         <ButtonWrapper>
           {showStatusButton && task.status === "todo" && (
             <StyledButton
-              variant="start"
+              $variant="start"
               onClick={() => onUpdate(task._id, { status: "inprogress" })}
             >
               Start
@@ -53,7 +53,7 @@ export default function TaskCard({
           )}
           {showStatusButton && task.status === "inprogress" && (
             <StyledButton
-              variant="done"
+              $variant="done"
               onClick={() => onUpdate(task._id, { status: "done" })}
             >
               Done

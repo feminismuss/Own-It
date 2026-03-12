@@ -14,6 +14,7 @@ export async function createTask(data) {
       return;
     }
     await mutate(API_TASKS);
+    await mutate(`${API_TASKS}?planId=${data.plan}`);
   } catch (error) {
     console.error("Error creating", error);
   }
