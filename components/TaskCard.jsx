@@ -39,19 +39,27 @@ export default function TaskCard({
         <StatusBadge aria-label={`Status: ${STATUS_CONFIG[task.status].text}`}>
           <span>{STATUS_CONFIG[task.status].icon}</span>
         </StatusBadge>
-        <Title>{task.title}</Title>
+        <StyledLink href={`/tasks/${task._id}`}>
+          <Title>{task.title}</Title>
+        </StyledLink>
         <ButtonWrapper>
-        {showStatusButton && task.status === "todo" && (
-          <StyledButton variant="start"
-            onClick={() => onUpdate(task._id, { status: "inprogress" })}
-          >
-            Start
-          </StyledButton>)}
-        {showStatusButton && task.status === "inprogress" && (
-          <StyledButton variant="done"onClick={() => onUpdate(task._id, { status: "done" })}>
-            Done
-          </StyledButton>)}
-          </ButtonWrapper>
+          {showStatusButton && task.status === "todo" && (
+            <StyledButton
+              variant="start"
+              onClick={() => onUpdate(task._id, { status: "inprogress" })}
+            >
+              Start
+            </StyledButton>
+          )}
+          {showStatusButton && task.status === "inprogress" && (
+            <StyledButton
+              variant="done"
+              onClick={() => onUpdate(task._id, { status: "done" })}
+            >
+              Done
+            </StyledButton>
+          )}
+        </ButtonWrapper>
       </TitleRow>
       <ButtonGroup>
         {showEditDelete && onDelete && (
@@ -60,7 +68,6 @@ export default function TaskCard({
         {showEditDelete && onUpdate && (
           <StyledButton onClick={() => setIsEditing(true)}>Edit</StyledButton>
         )}
-        
       </ButtonGroup>
     </Card>
   );
