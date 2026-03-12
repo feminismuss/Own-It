@@ -30,6 +30,6 @@ export default function TaskPage() {
     return <h1>Loading...</h1>;
   }
   return (
-    <TaskCard task={task} onDelete={handleDelete} onUpdate={handleUpdate} />
+    <TaskCard task={task} onDelete={handleDelete} onUpdate={handleUpdate} showEditDelete />
   );
 }
