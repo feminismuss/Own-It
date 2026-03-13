@@ -2,18 +2,14 @@ import { useState } from "react";
 import { Card, ButtonGroup, StyledButton } from "@/styles/sharedStyles";
 import styled from "styled-components";
 
-export default function TaskForm({ task, onUpdate, onCreate, onClose }) {
+export default function TaskForm({ task, onSubmit, onClose }) {
   const [title, setTitle] = useState(task ? task.title : "");
   const isEditMode = Boolean(task);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (isEditMode) {
-      await onUpdate(task._id, { title });
-    } else {
-      await onCreate({ title });
-      setTitle("");
-    }
+    await onSubmit({ title });
+    setTitle("");
     onClose();
   }
   return (

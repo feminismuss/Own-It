@@ -3,7 +3,7 @@ import useSWR from "swr";
 import TaskCard from "@/components/TaskCard";
 import TaskForm from "@/components/TaskForm";
 import { deletePlan, updatePlan } from "@/services/planService";
-import { createTask, updateTask } from "@/services/taskService";
+import { createTask } from "@/services/taskService";
 
 export default function PlanPage() {
   const router = useRouter();
@@ -28,9 +28,7 @@ export default function PlanPage() {
     await updatePlan(id, data);
     router.push("/");
   }
-  async function handleTaskUpdate(id, data) {
-    await updateTask(id, data);
-  }
+
   if (error) {
     return <div>Fehler beim Laden: {error.message} (Retry?)</div>;
   }
@@ -41,14 +39,9 @@ export default function PlanPage() {
   return (
     <main>
       <h1>{plan.name}</h1>
-      <TaskForm onCreate={handleCreate} onClose={() => {}} />
+      <TaskForm onSubmit={handleCreate} onClose={() => {}} />
       {tasks?.map((task) => (
-        <TaskCard
-          key={task._id}
-          task={task}
-          onUpdate={handleTaskUpdate}
-          showStatusButton
-        />
+        <TaskCard key={task._id} task={task} showStatusButton />
       ))}
     </main>
   );
