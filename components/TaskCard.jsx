@@ -7,11 +7,12 @@ import {
   StyledButton,
   StyledLink,
 } from "@/styles/sharedStyles";
+import { Circle, CircleDot, CircleCheckBig } from "lucide-react";
 
 const STATUS_CONFIG = {
-  todo: { icon: "○", text: "To Do" },
-  inprogress: { icon: "◑", text: "In Progress" },
-  done: { icon: "●", text: "Done" },
+  todo: { Icon: Circle, text: "To Do" },
+  inprogress: { Icon: CircleDot, text: "In Progress" },
+  done: { Icon: CircleCheckBig, text: "Done" },
 };
 
 export default function TaskCard({
@@ -22,6 +23,8 @@ export default function TaskCard({
   showEditDelete,
 }) {
   const [isEditing, setIsEditing] = useState(false);
+
+  const { Icon, text } = STATUS_CONFIG[task.status];
 
   if (isEditing) {
     return (
@@ -36,8 +39,8 @@ export default function TaskCard({
   return (
     <Card>
       <TitleRow>
-        <StatusBadge aria-label={`Status: ${STATUS_CONFIG[task.status].text}`}>
-          <span>{STATUS_CONFIG[task.status].icon}</span>
+        <StatusBadge aria-label={`Status: ${text}`}>
+          <Icon />
         </StatusBadge>
         <StyledLink href={`/tasks/${task._id}`}>
           <Title>{task.title}</Title>
