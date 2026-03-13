@@ -20,7 +20,7 @@ export async function createTask(data) {
   }
 }
 
-export async function updateTask(id, data) {
+export async function updateTask(id, data, planId) {
   try {
     const response = await fetch(`${API_TASKS}/${id}`, {
       method: "PUT",
@@ -32,6 +32,10 @@ export async function updateTask(id, data) {
       return;
     }
     await mutate(`${API_TASKS}/${id}`);
+    await mutate(API_TASKS);
+    if (planId) {
+      await mutate(`${API_TASKS}?planId=${planId}`);
+    }
   } catch (error) {
     console.error("Error updating", error);
   }

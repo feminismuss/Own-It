@@ -7,27 +7,25 @@ import {
   StyledButton,
   StyledLink,
 } from "@/styles/sharedStyles";
+import { Circle, CircleDot, CircleCheckBig } from "lucide-react";
+import { deleteTask, updateTask } from "@/services/taskService";
 
 const STATUS_CONFIG = {
-  todo: { icon: "○", text: "To Do" },
-  inprogress: { icon: "◑", text: "In Progress" },
-  done: { icon: "●", text: "Done" },
+  todo: { Icon: Circle, text: "To Do" },
+  inprogress: { Icon: CircleDot, text: "In Progress" },
+  done: { Icon: CircleCheckBig, text: "Done" },
 };
 
-export default function TaskCard({
-  task,
-  onDelete,
-  onUpdate,
-  showStatusButton,
-  showEditDelete,
-}) {
+export default function TaskCard({ task, showStatusButton, showEditDelete }) {
   const [isEditing, setIsEditing] = useState(false);
+
+  const { Icon, text } = STATUS_CONFIG[task.status];
 
   if (isEditing) {
     return (
       <TaskForm
         task={task}
-        onUpdate={onUpdate}
+        onSubmit={(data) => updateTask(task._id, data)}
         onClose={() => setIsEditing(false)}
       />
     );
@@ -36,8 +34,8 @@ export default function TaskCard({
   return (
     <Card>
       <TitleRow>
-        <StatusBadge aria-label={`Status: ${STATUS_CONFIG[task.status].text}`}>
-          <span>{STATUS_CONFIG[task.status].icon}</span>
+        <StatusBadge aria-label={`Status: ${text}`}>
+          <Icon />
         </StatusBadge>
         <StyledLink href={`/tasks/${task._id}`}>
           <Title>{task.title}</Title>
@@ -46,7 +44,9 @@ export default function TaskCard({
           {showStatusButton && task.status === "todo" && (
             <StyledButton
               $variant="start"
-              onClick={() => onUpdate(task._id, { status: "inprogress" })}
+              onClick={() =>
+                updateTask(task._id, { status: "inprogress" }, task.plan)
+              }
             >
               Start
             </StyledButton>
@@ -54,7 +54,9 @@ export default function TaskCard({
           {showStatusButton && task.status === "inprogress" && (
             <StyledButton
               $variant="done"
-              onClick={() => onUpdate(task._id, { status: "done" })}
+              onClick={() =>
+                updateTask(task._id, { status: "done" }, task.plan)
+              }
             >
               Done
             </StyledButton>
@@ -62,10 +64,12 @@ export default function TaskCard({
         </ButtonWrapper>
       </TitleRow>
       <ButtonGroup>
-        {showEditDelete && onDelete && (
-          <StyledButton onClick={() => onDelete(task._id)}>Delete</StyledButton>
+        {showEditDelete && (
+          <StyledButton onClick={() => deleteTask(task._id)}>
+            Delete
+          </StyledButton>
         )}
-        {showEditDelete && onUpdate && (
+        {showEditDelete && (
           <StyledButton onClick={() => setIsEditing(true)}>Edit</StyledButton>
         )}
       </ButtonGroup>
