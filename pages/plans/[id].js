@@ -4,8 +4,13 @@ import TaskCard from "@/components/TaskCard";
 import TaskForm from "@/components/TaskForm";
 import { deletePlan, updatePlan } from "@/services/planService";
 import { createTask } from "@/services/taskService";
+import { StyledMain, StyledButton, OutlineButton } from "@/styles/sharedStyles";
+import PlanForm from "@/components/PlanForm";
+import { useState } from "react";
+import styled from "styled-components";
 
 export default function PlanPage() {
+  const [isEditingPlan, setIsEditingPlan] = useState(false);
   const router = useRouter();
   const { id } = router.query;
   const {
@@ -37,12 +42,62 @@ export default function PlanPage() {
     return <h1>Loading...</h1>;
   }
   return (
-    <main>
-      <h1>{plan.name}</h1>
+    <StyledMain>
+      {!isEditingPlan && (
+        <PlanHeader>
+          <h1>{plan.name}</h1>
+          <PlanButtons>
+            <OutlineButton onClick={() => setIsEditingPlan(true)}>
+              Edit
+            </OutlineButton>
+            <OutlineButton onClick={() => handleDelete(plan._id)}>
+              Delete
+            </OutlineButton>
+          </PlanButtons>
+        </PlanHeader>
+      )}
+      {isEditingPlan && (
+        <PlanForm
+          plan={plan}
+          onSubmit={async (data) => {
+            await updatePlan(plan._id, data);
+            setIsEditingPlan(false);
+          }}
+          onClose={() => setIsEditingPlan(false)}
+        />
+      )}
       <TaskForm onSubmit={handleCreate} onClose={() => {}} />
+        <TaskList>
       {tasks?.map((task) => (
-        <TaskCard key={task._id} task={task} showStatusButton />
+        <li key={task._id}>
+        <TaskCard
+          task={task}
+          showStatusButton
+          planColor={plan.color}
+          showEditDelete
+        />
+        </li>
       ))}
-    </main>
+      </TaskList>
+    </StyledMain>
   );
 }
+const PlanHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`;
+const PlanButtons = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.sm};
+  align-self: flex-end;
+`;
+const TaskList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.sm};
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
