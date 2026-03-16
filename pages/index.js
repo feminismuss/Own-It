@@ -1,37 +1,49 @@
 import styled from "styled-components";
-import TaskCard from "@/components/TaskCard";
+import PlanCard from "@/components/PlanCard";
+import PlanForm from "@/components/PlanForm";
 import useSWR from "swr";
-import { updateTask } from "@/services/taskService";
+import { createPlan } from "@/services/planService";
+import { useState } from "react";
+import { StyledMain, OutlineButton } from "@/styles/sharedStyles";
 
 export default function Home() {
-  const { data: tasks, isLoading, error } = useSWR("/api/tasks");
+  const { data: plans, isLoading, error } = useSWR("/api/plans");
+  const [isCreating, setIsCreating] = useState(false);
 
   if (error) return <div>Fehler beim Laden: {error.message}</div>;
-  if (isLoading || !tasks) return <h1>Loading...</h1>;
-
-  async function handleUpdate(id, data) {
-    await updateTask(id, data);
-  }
+  if (isLoading || !plans) return <h1>Loading...</h1>;
 
   return (
-    <TaskList>
-      {tasks.map((task) => (
-        <TaskCard
-          key={task._id}
-          task={task}
-          onUpdate={handleUpdate}
-          showStatusButton
+    <StyledMain>
+      {isCreating ? (
+        <PlanForm
+          onSubmit={async (data) => {
+            await createPlan(data);
+            setIsCreating(false);
+          }}
+          onClose={() => setIsCreating(false)}
         />
-      ))}
-    </TaskList>
+      ) : (
+        <OutlineButton onClick={() => setIsCreating(true)}>
+          Add new Plan
+        </OutlineButton>
+      )}
+      <StyledPlanList>
+        {plans.map((plan) => (
+          <li key={plan._id}>
+            <PlanCard plan={plan} />
+          </li>
+        ))}
+      </StyledPlanList>
+    </StyledMain>
   );
 }
 
-const TaskList = styled.main`
+const StyledPlanList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => theme.spacing.md};
-  max-width: 480px;
-  margin: 0 auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 `;

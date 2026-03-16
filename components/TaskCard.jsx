@@ -9,6 +9,7 @@ import {
 } from "@/styles/sharedStyles";
 import { Circle, CircleDot, CircleCheckBig } from "lucide-react";
 import { deleteTask, updateTask } from "@/services/taskService";
+import { useRouter } from "next/router";
 
 const STATUS_CONFIG = {
   todo: { Icon: Circle, text: "To Do" },
@@ -16,23 +17,31 @@ const STATUS_CONFIG = {
   done: { Icon: CircleCheckBig, text: "Done" },
 };
 
-export default function TaskCard({ task, showStatusButton, showEditDelete }) {
+export default function TaskCard({
+  task,
+  showStatusButton,
+  showEditDelete,
+  planColor,
+}) {
   const [isEditing, setIsEditing] = useState(false);
-
+  const router = useRouter();
   const { Icon, text } = STATUS_CONFIG[task.status];
 
   if (isEditing) {
     return (
       <TaskForm
         task={task}
-        onSubmit={(data) => updateTask(task._id, data)}
+        onSubmit={async (data) => {
+          await updateTask(task._id, data);
+          if (showEditDelete) router.push("/");
+        }}
         onClose={() => setIsEditing(false)}
       />
     );
   }
 
   return (
-    <Card>
+    <Card $color={planColor}>
       <TitleRow>
         <StatusBadge aria-label={`Status: ${text}`}>
           <Icon />
@@ -65,7 +74,12 @@ export default function TaskCard({ task, showStatusButton, showEditDelete }) {
       </TitleRow>
       <ButtonGroup>
         {showEditDelete && (
-          <StyledButton onClick={() => deleteTask(task._id)}>
+          <StyledButton
+            onClick={async () => {
+              await deleteTask(task._id);
+              router.push("/");
+            }}
+          >
             Delete
           </StyledButton>
         )}
