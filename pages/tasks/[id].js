@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import TaskCard from "@/components/TaskCard";
 import { StyledMain } from "@/styles/sharedStyles";
+import BackButton from "@/components/BackButton";
 
 export default function TaskPage() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function TaskPage() {
   return (
     <StyledMain>
     <TaskCard task={task} showEditDelete />
+    <BackButton />
     </StyledMain>
   );
 }

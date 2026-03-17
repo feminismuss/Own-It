@@ -75,7 +75,7 @@ export default function TaskCard({
       <ButtonGroup>
         {showEditDelete && task.status !== "todo" && (
           <StyledButton
-            onClick={() => updateTask(task._id, { status: "todo" }, task.plan)}
+            onClick={async () => {await updateTask(task._id, { status: "todo" }, task.plan); router.back();}}
           >
             Reset
           </StyledButton>
@@ -84,7 +84,7 @@ export default function TaskCard({
           <StyledButton
             onClick={async () => {
               await deleteTask(task._id);
-              router.back();
+              router.push(`/plans/${task.plan}`);
             }}
           >
             Delete
