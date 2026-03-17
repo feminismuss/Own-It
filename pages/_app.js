@@ -5,12 +5,30 @@ import theme from "@/styles/themes";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styled from "styled-components";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
+const PUBLIC_PAGES = ["/login", "/register"];
+
+function AuthGuard({ children }) {        // ← hier
+  const { status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated" && !PUBLIC_PAGES.includes(router.pathname)) {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  return children;
+}
+
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps 
-    
+
   },
 }) {
   return (
@@ -22,11 +40,13 @@ export default function App({
       >
         <ThemeProvider theme={theme}>
           <GlobalStyle />
+          <AuthGuard>
           <Wrapper>
             <Header />
             <Component {...pageProps} />
             <Footer />
           </Wrapper>
+          </AuthGuard>
         </ThemeProvider>
       </SWRConfig>
     </SessionProvider>
