@@ -5,23 +5,31 @@ import theme from "@/styles/themes";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import styled from "styled-components";
+import { SessionProvider } from "next-auth/react";
 
-export default function App({ Component, pageProps }) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps 
+    
+  },
+}) {
   return (
-    <SWRConfig
-      value={{
-        fetcher: (url) => fetch(url).then((res) => res.json()),
-      }}
-    >
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        <Wrapper>
-        <Header />
-        <Component {...pageProps} />
-         <Footer />
-         </Wrapper>
-      </ThemeProvider>
-    </SWRConfig>
+    <SessionProvider session={session}>
+      <SWRConfig
+        value={{
+          fetcher: (url) => fetch(url).then((res) => res.json()),
+        }}
+      >
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <Wrapper>
+            <Header />
+            <Component {...pageProps} />
+            <Footer />
+          </Wrapper>
+        </ThemeProvider>
+      </SWRConfig>
+    </SessionProvider>
   );
 }
 const Wrapper = styled.div`
