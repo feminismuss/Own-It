@@ -1,6 +1,7 @@
 import LoginForm from "@/components/LoginForm";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
+import { StyledMain } from "@/styles/sharedStyles";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,5 +20,5 @@ export default function LoginPage() {
     }
   }
 
-  return <LoginForm onSubmit={handleLogin} />;
+  return <StyledMain><LoginForm onSubmit={handleLogin} /></StyledMain>;
 }
