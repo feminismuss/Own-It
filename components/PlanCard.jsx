@@ -14,7 +14,7 @@ export default function PlanCard({ plan }) {
 
 
 const Title = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.lg};
+  font-size: ${({ theme }) => theme.fontSizes.xl};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text};
   margin: 0;
