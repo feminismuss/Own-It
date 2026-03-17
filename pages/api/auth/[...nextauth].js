@@ -4,7 +4,7 @@ import dbConnect from "@/db/connect";
 import User from "@/db/models/User";
 import bcrypt from "bcryptjs";
 
-export default NextAuth({
+export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -21,7 +21,7 @@ export default NextAuth({
           user.password
         );
         if (!isValid) throw new Error("Wrong password");
-        return { id: user._id, name: user.name, email: user.email };
+        return { id: user._id.toString(), name: user.name, email: user.email };
       },
     }),
   ],
@@ -43,4 +43,6 @@ export default NextAuth({
       return session;
     },
   },
-});
+};
+
+export default NextAuth(authOptions);
