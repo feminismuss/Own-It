@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Menu } from "lucide-react";
 import { StyledLink } from "@/styles/sharedStyles";
 import styled from "styled-components";
+import { useSession, signOut } from "next-auth/react";
 
 export default function BurgerMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
 
   return (
     <div>
@@ -18,6 +20,23 @@ export default function BurgerMenu() {
               <MenuLink href="/" onClick={() => setIsOpen(false)}>
                 Home
               </MenuLink>
+            </li>
+            <li>
+              {session ? (
+                <MenuLink
+                  href="/login"
+                  onClick={() => {
+                    signOut({ callbackUrl: "/login" });
+                    setIsOpen(false);
+                  }}
+                >
+                  Logout
+                </MenuLink>
+              ) : (
+                <MenuLink href="/login" onClick={() => setIsOpen(false)}>
+                  Login
+                </MenuLink>
+              )}
             </li>
           </ul>
         </Nav>
@@ -46,7 +65,7 @@ const Nav = styled.nav`
   z-index: 200;
   list-style: none;
   min-width: 150px;
-   ul {
+  ul {
     list-style: none;
     padding: 0;
     margin: 0;

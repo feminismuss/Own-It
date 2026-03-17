@@ -12,6 +12,7 @@ const planSchema = new Schema(
       default: () =>
         PLAN_COLORS[Math.floor(Math.random() * PLAN_COLORS.length)],
     },
+    owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );

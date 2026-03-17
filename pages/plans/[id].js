@@ -8,6 +8,7 @@ import { StyledMain, StyledButton, OutlineButton } from "@/styles/sharedStyles";
 import PlanForm from "@/components/PlanForm";
 import { useState } from "react";
 import styled from "styled-components";
+import BackButton from "@/components/BackButton";
 
 export default function PlanPage() {
   const [isEditingPlan, setIsEditingPlan] = useState(false);
@@ -78,6 +79,7 @@ export default function PlanPage() {
           </li>
         ))}
       </TaskList>
+      <BackButton />
     </StyledMain>
   );
 }
