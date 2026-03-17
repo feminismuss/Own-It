@@ -44,8 +44,8 @@ export default function PlanPage() {
   return (
     <StyledMain>
       {!isEditingPlan && (
-        <PlanHeader>
-          <h1>{plan.name}</h1>
+        <PlanHeader $color={plan.color}>
+          <h2>{plan.name}</h2>
           <PlanButtons>
             <OutlineButton onClick={() => setIsEditingPlan(true)}>
               Edit
@@ -67,17 +67,17 @@ export default function PlanPage() {
         />
       )}
       <TaskForm onSubmit={handleCreate} onClose={() => {}} />
-        <TaskList>
-      {tasks?.map((task) => (
-        <li key={task._id}>
-        <TaskCard
-          task={task}
-          showStatusButton
-          planColor={plan.color}
-          showEditDelete
-        />
-        </li>
-      ))}
+      <TaskList>
+        {tasks?.map((task) => (
+          <li key={task._id}>
+            <TaskCard
+              task={task}
+              showStatusButton
+              planColor={plan.color}
+              showEditDelete
+            />
+          </li>
+        ))}
       </TaskList>
     </StyledMain>
   );
@@ -87,6 +87,9 @@ const PlanHeader = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xs};
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  background: ${({ $color }) => $color}22;
+  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
 `;
 const PlanButtons = styled.div`
   display: flex;
