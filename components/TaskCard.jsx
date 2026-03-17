@@ -33,7 +33,7 @@ export default function TaskCard({
         task={task}
         onSubmit={async (data) => {
           await updateTask(task._id, data);
-          if (showEditDelete) router.push("/");
+          if (showEditDelete) router.back();
         }}
         onClose={() => setIsEditing(false)}
       />
@@ -73,11 +73,18 @@ export default function TaskCard({
         </ButtonWrapper>
       </TitleRow>
       <ButtonGroup>
+        {showEditDelete && task.status !== "todo" && (
+          <StyledButton
+            onClick={() => updateTask(task._id, { status: "todo" }, task.plan)}
+          >
+            Reset
+          </StyledButton>
+        )}
         {showEditDelete && (
           <StyledButton
             onClick={async () => {
               await deleteTask(task._id);
-              router.push("/");
+              router.back();
             }}
           >
             Delete

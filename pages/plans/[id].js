@@ -74,7 +74,6 @@ export default function PlanPage() {
               task={task}
               showStatusButton
               planColor={plan.color}
-              showEditDelete
             />
           </li>
         ))}
