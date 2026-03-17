@@ -16,7 +16,10 @@ export default NextAuth({
         await dbConnect();
         const user = await User.findOne({ email: credentials.email });
         if (!user) throw new Error("No user found");
-        const isValid = await bcrypt.compare(credentials.password, user.password);
+        const isValid = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
         if (!isValid) throw new Error("Wrong password");
         return { id: user._id, name: user.name, email: user.email };
       },
@@ -27,5 +30,17 @@ export default NextAuth({
   },
   pages: {
     signIn: "/login",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.id = token.id;
+      return session;
+    },
   },
 });
