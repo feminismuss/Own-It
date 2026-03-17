@@ -2,6 +2,7 @@ import LoginForm from "@/components/LoginForm";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { StyledMain } from "@/styles/sharedStyles";
+import { StyledLink } from "@/styles/sharedStyles";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,5 +21,7 @@ export default function LoginPage() {
     }
   }
 
-  return <StyledMain><LoginForm onSubmit={handleLogin} /></StyledMain>;
+  return <StyledMain><LoginForm onSubmit={handleLogin} />
+   <p>Noch kein Account? <StyledLink href="/register">Registrieren</StyledLink></p>
+  </StyledMain>;
 }
