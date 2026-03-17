@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import TaskCard from "@/components/TaskCard";
-import { deleteTask, updateTask } from "@/services/taskService";
+import { StyledMain } from "@/styles/sharedStyles";
+import BackButton from "@/components/BackButton";
 
 export default function TaskPage() {
   const router = useRouter();
@@ -20,6 +21,9 @@ export default function TaskPage() {
     return <h1>Loading...</h1>;
   }
   return (
+    <StyledMain>
     <TaskCard task={task} showEditDelete />
+    <BackButton />
+    </StyledMain>
   );
 }

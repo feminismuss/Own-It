@@ -7,6 +7,7 @@ export const StyledMain = styled.main`
   gap: ${({ theme }) => theme.spacing.sm};
   padding: ${({ theme }) => theme.spacing.md};
   max-width: 480px;
+  width: 100%;
   margin: 0 auto;
 `;
 

@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { useRouter } from "next/router";
+import BurgerMenu from "./BurgerMenu";
+import { useState, useEffect } from "react";
 
 const QUOTES = [
   "Done is better than perfect.",
@@ -15,13 +17,16 @@ const QUOTES = [
 export default function Header() {
   const router = useRouter();
   const isLanding = router.pathname === "/";
+  const [quote] = useState(
+    () => QUOTES[Math.floor(Math.random() * QUOTES.length)]
+  );
+  const [isMounted, setIsMounted] = useState(false);
+
   return (
     <StyledHeader>
-      {isLanding ? (
-        <h1>Own It</h1>
-      ) : (<><h1>Own It</h1>
-        <p>{QUOTES[Math.floor(Math.random()*QUOTES.length)]}</p></>
-      )}
+      <BurgerMenu />
+      <h1>Own It</h1>
+      <Quote suppressHydrationWarning>{!isLanding && quote}</Quote>
     </StyledHeader>
   );
 }
@@ -35,10 +40,17 @@ const StyledHeader = styled.header`
   padding: ${({ theme }) => theme.spacing.xl};
   z-index: 100;
   text-align: center;
-  h1, h2 {
+  position: relative;
+  h1,
+  h2 {
     margin: 0;
   }
   p {
     margin: 0;
   }
+`;
+const Quote = styled.p`
+  color: ${({ theme }) => theme.colors.muted};
+  font-size: ${({ theme }) => theme.fontSizes.xl};
+  margin: 0;
 `;
