@@ -9,14 +9,16 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-const PUBLIC_PAGES = ["/login", "/register"];
+const PUBLIC_PAGES = ["/login", "/register", "/invite"];
 
 function AuthGuard({ children }) {        // ← hier
   const { status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "unauthenticated" && !PUBLIC_PAGES.includes(router.pathname)) {
+    if (status === "unauthenticated" && 
+      !PUBLIC_PAGES.includes(router.pathname) && 
+      !router.pathname.startsWith("/invite")){
       router.push("/login");
     }
   }, [status, router]);

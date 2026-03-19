@@ -22,6 +22,7 @@ export default function TaskCard({
   showStatusButton,
   showEditDelete,
   planColor,
+  disableLink
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
@@ -46,9 +47,9 @@ export default function TaskCard({
         <StatusBadge aria-label={`Status: ${text}`}>
           <Icon />
         </StatusBadge>
-        <StyledLink href={`/tasks/${task._id}`}>
-          <Title>{task.title}</Title>
-        </StyledLink>
+        {disableLink ? (<Title>{task.title}</Title>) : (<StyledLink href={`/tasks/${task._id}`}>
+          <Title>{task.title}</Title> 
+        </StyledLink>)}
         <ButtonWrapper>
           {showStatusButton && task.status === "todo" && (
             <StyledButton

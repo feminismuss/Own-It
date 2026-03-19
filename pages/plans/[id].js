@@ -41,7 +41,6 @@ export default function PlanPage() {
   if (error) {
     return <div>Fehler beim Laden: {error.message} (Retry?)</div>;
   }
-
   if (isLoading || !plan) {
     return <h1>Loading...</h1>;
   }
