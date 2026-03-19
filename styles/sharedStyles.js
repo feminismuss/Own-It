@@ -49,8 +49,8 @@ export const StyledLink = styled(Link)`
   text-decoration: none;
 `;
 export const OutlineButton = styled.button`
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.md};
+  width: auto;
+  padding: ${({ theme }) => theme.spacing.sm};
   background: transparent;
   border: 2px dashed ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.lg};
