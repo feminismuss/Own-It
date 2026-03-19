@@ -1,4 +1,4 @@
-import Plan from "@/db/models/plan";
+import Plan from "@/db/models/Plan";
 import dbConnect from "@/db/connect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";

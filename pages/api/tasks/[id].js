@@ -1,4 +1,4 @@
-import Task from "@/db/models/task";
+import Task from "@/db/models/Task";
 import dbConnect from "@/db/connect";
 
 export default async function handler(request, response) {

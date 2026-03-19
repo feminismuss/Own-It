@@ -1,4 +1,4 @@
-import Plan from "@/db/models/plan";
+import Plan from "@/db/models/Plan";
 import dbConnect from "@/db/connect";
 
 export default async function handler(request, response) {
