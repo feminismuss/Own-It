@@ -58,9 +58,8 @@ export default function PlanPage() {
             <OutlineButton onClick={() => handleDelete(plan._id)}>
               Delete
             </OutlineButton>
-            
+            {isOwner && <InviteLink planId={plan._id} />}
           </PlanButtons>
-          {isOwner && <InviteLink planId={plan._id} />}
         </PlanHeader>
       )}
       {isEditingPlan && (
