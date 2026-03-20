@@ -25,6 +25,10 @@ export default function InvitePlanPage() {
     return <h1>Loading...</h1>;
   }
   const isOwner = plan.owner === session?.user?.id;
+  async function handleJoin() {
+    await fetch(`/api/plans/invite/${token}`, { method: "POST" });
+    router.push("/");
+  }
   return (
     <StyledMain>
       <PlanHeader $color={plan.color}>
@@ -42,6 +46,12 @@ export default function InvitePlanPage() {
           </li>
         ))}
       </TaskList>
+      {session && <OutlineButton onClick={handleJoin}>Join Plan</OutlineButton>}
+      {!session && (
+        <OutlineButton onClick={() => router.push("/login")}>
+          Login to join
+        </OutlineButton>
+      )}
       <BackButton />
     </StyledMain>
   );
