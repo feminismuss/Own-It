@@ -10,12 +10,12 @@ export default async function handler(request, response) {
   if (request.method === "GET") {
     try {
       const plan = await Plan.findOne({ inviteToken: token });
-      if (!plan) return response.status(404).json({ error: "Plan not found" });
-      response.status(200).json(plan);
-      return;
+      if (!plan) {
+        return response.status(404).json({ error: "Plan not found" });
+      }
+      return response.status(200).json(plan);
     } catch (error) {
-      response.status(500).json({ error: error.message });
-      return;
+      return response.status(500).json({ error: error.message });
     }
   }
   if (request.method === "POST") {
@@ -25,16 +25,18 @@ export default async function handler(request, response) {
         return response.status(401).json({ error: "Not authenticated" });
       }
       const plan = await Plan.findOne({ inviteToken: token });
-      if (!plan) return response.status(404).json({ error: "Plan not found" });
+      if (!plan) {
+        return response.status(404).json({ error: "Plan not found" });
+      }
       const allreadyMember = plan.members.includes(session.user.id);
       if (allreadyMember) {
         return response.status(400).json({ error: "Allready a member" });
       }
       plan.members.push(session.user.id);
       await plan.save();
-      response.status(200).json({ message: "Joined successfully" });
+      return response.status(200).json({ message: "Joined successfully" });
     } catch (error) {
-      response.status(500).json({ error: error.message });
+      return response.status(500).json({ error: error.message });
     }
   }
 }
