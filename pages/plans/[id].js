@@ -4,11 +4,13 @@ import TaskCard from "@/components/TaskCard";
 import TaskForm from "@/components/TaskForm";
 import { deletePlan, updatePlan } from "@/services/planService";
 import { createTask } from "@/services/taskService";
-import { StyledMain, StyledButton, OutlineButton } from "@/styles/sharedStyles";
+import { StyledMain, OutlineButton } from "@/styles/sharedStyles";
 import PlanForm from "@/components/PlanForm";
 import { useState } from "react";
 import styled from "styled-components";
 import BackButton from "@/components/BackButton";
+import InviteLink from "@/components/InviteLink";
+import { useSession } from "next-auth/react";
 
 export default function PlanPage() {
   const [isEditingPlan, setIsEditingPlan] = useState(false);
@@ -20,6 +22,7 @@ export default function PlanPage() {
     error,
   } = useSWR(id ? `/api/plans/${id}` : null);
   const { data: tasks } = useSWR(id ? `/api/tasks?planId=${id}` : null);
+  const { data: session } = useSession();
 
   async function handleCreate(data) {
     await createTask({ ...data, plan: id });
@@ -38,10 +41,10 @@ export default function PlanPage() {
   if (error) {
     return <div>Fehler beim Laden: {error.message} (Retry?)</div>;
   }
-
   if (isLoading || !plan) {
     return <h1>Loading...</h1>;
   }
+  const isOwner = plan.owner === session?.user?.id;
   return (
     <StyledMain>
       {!isEditingPlan && (
@@ -54,6 +57,7 @@ export default function PlanPage() {
             <OutlineButton onClick={() => handleDelete(plan._id)}>
               Delete
             </OutlineButton>
+            {isOwner && <InviteLink planId={plan._id} />}
           </PlanButtons>
         </PlanHeader>
       )}
@@ -71,11 +75,7 @@ export default function PlanPage() {
       <TaskList>
         {tasks?.map((task) => (
           <li key={task._id}>
-            <TaskCard
-              task={task}
-              showStatusButton
-              planColor={plan.color}
-            />
+            <TaskCard task={task} showStatusButton planColor={plan.color} />
           </li>
         ))}
       </TaskList>
@@ -94,6 +94,7 @@ const PlanHeader = styled.div`
 `;
 const PlanButtons = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: ${({ theme }) => theme.spacing.sm};
   align-self: flex-end;
 `;

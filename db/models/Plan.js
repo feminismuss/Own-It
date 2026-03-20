@@ -13,6 +13,8 @@ const planSchema = new Schema(
         PLAN_COLORS[Math.floor(Math.random() * PLAN_COLORS.length)],
     },
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    members: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    inviteToken: { type: String, unique: true, sparse: true },
   },
   { timestamps: true }
 );

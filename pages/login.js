@@ -6,6 +6,7 @@ import { StyledLink } from "@/styles/sharedStyles";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { token } = router.query;
 
   async function handleLogin(data) {
     const result = await signIn("credentials", {
@@ -15,13 +16,23 @@ export default function LoginPage() {
     });
 
     if (result.ok) {
-      router.push("/");
+      if (token) {
+        router.push(`/invite/${token}`);
+      } else {
+        router.push("/");
+      }
     } else {
       console.error("Login failed");
     }
   }
 
-  return <StyledMain><LoginForm onSubmit={handleLogin} />
-   <p>Noch kein Account? <StyledLink href="/register">Registrieren</StyledLink></p>
-  </StyledMain>;
+  return (
+    <StyledMain>
+      <LoginForm onSubmit={handleLogin} />
+      <p>
+        Noch kein Account?{" "}
+        <StyledLink href="/register">Registrieren</StyledLink>
+      </p>
+    </StyledMain>
+  );
 }

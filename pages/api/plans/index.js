@@ -1,5 +1,5 @@
 import dbConnect from "@/db/connect";
-import Plan from "@/db/models/plan";
+import Plan from "@/db/models/Plan";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
