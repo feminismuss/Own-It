@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { OutlineButton, StyledButton } from "@/styles/sharedStyles";
 import { Copy, Check } from "lucide-react";
@@ -6,6 +6,11 @@ import { Copy, Check } from "lucide-react";
 export default function InviteLink({ planId }) {
   const [inviteLink, setInviteLink] = useState(null);
   const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const id = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(id);
+  }, [copied]);
 
   async function generateInviteLink() {
     const response = await fetch(`/api/plans/${planId}/invite`, {
@@ -17,24 +22,23 @@ export default function InviteLink({ planId }) {
   async function copyToClipboard() {
     await navigator.clipboard.writeText(inviteLink);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
-     <>
-    <OutlineButton onClick={generateInviteLink}>
-      Generate Invite Link
-    </OutlineButton>
-    {inviteLink && (
-      <LinkRow>
-        <LinkText>{inviteLink}</LinkText>
-        <IconButton onClick={copyToClipboard}>
-          {copied ? <Check size={16} /> : <Copy size={16} />}
-        </IconButton>
-      </LinkRow>
-    )}
-  </>
-);
+    <>
+      <OutlineButton onClick={generateInviteLink}>
+        Generate Invite Link
+      </OutlineButton>
+      {inviteLink && (
+        <LinkRow>
+          <LinkText>{inviteLink}</LinkText>
+          <IconButton onClick={copyToClipboard}>
+            {copied ? <Check size={16} /> : <Copy size={16} />}
+          </IconButton>
+        </LinkRow>
+      )}
+    </>
+  );
 }
 const LinkText = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.sm};
