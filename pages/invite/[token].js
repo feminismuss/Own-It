@@ -48,9 +48,9 @@ export default function InvitePlanPage() {
       </TaskList>
       {session && <OutlineButton onClick={handleJoin}>Join Plan</OutlineButton>}
       {!session && (
-        <OutlineButton onClick={() => router.push("/login")}>
+        <Link href="/login">
           Login to join
-        </OutlineButton>
+        </Link>
       )}
       <BackButton />
     </StyledMain>
