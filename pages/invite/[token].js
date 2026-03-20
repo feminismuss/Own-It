@@ -5,6 +5,7 @@ import { StyledMain, OutlineButton } from "@/styles/sharedStyles";
 import styled from "styled-components";
 import BackButton from "@/components/BackButton";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function InvitePlanPage() {
   const router = useRouter();
@@ -48,11 +49,7 @@ export default function InvitePlanPage() {
       </TaskList>
       {session && <OutlineButton onClick={handleJoin}>Join Plan</OutlineButton>}
       {!session && (
-<<<<<<< HEAD
-        <Link href="/login">
-=======
-        <OutlineButton onClick={() => router.push(`/login?token=${token}`)}>
->>>>>>> bd1ce97 (add router to planpage after invite)
+        <Link href={`/login?token=${token}`}>
           Login to join
         </Link>
       )}
