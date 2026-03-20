@@ -16,7 +16,9 @@ export default async function handler(request, response) {
       const { id } = request.query;
       const plan = await Plan.findById(id);
 
-      if (!plan) return response.status(404).json({ error: "Plan not found" });
+      if (!plan) {
+        return response.status(404).json({ error: "Plan not found" });
+      }
       if (plan.owner.toString() !== session.user.id) {
         return response.status(403).json({ error: "Not the owner" });
       }
