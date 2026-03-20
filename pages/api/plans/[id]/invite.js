@@ -23,9 +23,10 @@ export default async function handler(request, response) {
       const token = crypto.randomBytes(16).toString("hex");
       plan.inviteToken = token;
       await plan.save();
-      response.status(200).json({ token });
+      return response.status(200).json({ token });
     } catch (error) {
-      response.status(500).json({ error: error.message });
+      return response.status(500).json({ error: error.message });
     }
   }
+  return response.status(405).json({ error: "Method not allowed" });
 }
