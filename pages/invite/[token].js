@@ -27,7 +27,7 @@ export default function InvitePlanPage() {
   const isOwner = plan.owner === session?.user?.id;
   async function handleJoin() {
     await fetch(`/api/plans/invite/${token}`, { method: "POST" });
-    router.push("/");
+    router.push(`/plans/${plan._id}`);
   }
   return (
     <StyledMain>
@@ -48,7 +48,11 @@ export default function InvitePlanPage() {
       </TaskList>
       {session && <OutlineButton onClick={handleJoin}>Join Plan</OutlineButton>}
       {!session && (
+<<<<<<< HEAD
         <Link href="/login">
+=======
+        <OutlineButton onClick={() => router.push(`/login?token=${token}`)}>
+>>>>>>> bd1ce97 (add router to planpage after invite)
           Login to join
         </Link>
       )}
