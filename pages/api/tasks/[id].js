@@ -7,7 +7,7 @@ export default async function handler(request, response) {
 
   if (request.method === "GET") {
     try {
-      const task = await Task.findById(id);
+      const task = await Task.findById(id).populate("assignedTo", "name");
       response.status(200).json(task);
       return;
     } catch (error) {
