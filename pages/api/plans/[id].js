@@ -1,5 +1,7 @@
 import Plan from "@/db/models/Plan";
 import dbConnect from "@/db/connect";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(request, response) {
   await dbConnect();
@@ -18,6 +20,17 @@ export default async function handler(request, response) {
 
   if (request.method === "PUT") {
     try {
+      const session = await getServerSession(request, response, authOptions);
+      if (!session) {
+        return response.status(401).json({ error: "Not authenticated" });
+      }
+      const plan = await Plan.findById(id);
+      if (!plan) {
+        return response.status(404).json({ error: "Plan not found" });
+      }
+      if (plan.owner.toString() !== session.user.id) {
+        return response.status(403).json({ error: "Not authorized" });
+      }
       const planData = request.body;
       const planToUpdate = await Plan.findByIdAndUpdate(id, planData, {
         new: true,
@@ -36,6 +49,17 @@ export default async function handler(request, response) {
 
   if (request.method === "DELETE") {
     try {
+        const session = await getServerSession(request, response, authOptions);
+      if (!session) {
+        return response.status(401).json({ error: "Not authenticated" });
+      }
+      const plan = await Plan.findById(id);
+      if (!plan) {
+        return response.status(404).json({ error: "Plan not found" });
+      }
+      if (plan.owner.toString() !== session.user.id) {
+        return response.status(403).json({ error: "Not authorized" });
+      }
       const planToDelete = await Plan.findByIdAndDelete(id);
       if (!planToDelete) {
         response.status(404).json({ status: "Plan not found" });
