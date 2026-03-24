@@ -11,6 +11,7 @@ import styled from "styled-components";
 import BackButton from "@/components/BackButton";
 import InviteLink from "@/components/InviteLink";
 import { useSession } from "next-auth/react";
+import { User } from "lucide-react";
 
 export default function PlanPage() {
   const [isEditingPlan, setIsEditingPlan] = useState(false);
@@ -45,13 +46,25 @@ export default function PlanPage() {
     return <h1>Loading...</h1>;
   }
   const isOwner = plan.owner === session?.user?.id;
-  const isMember = plan.members?.some((memberId) => memberId.toString() === session?.user?.id);
+  const isMember = plan.members?.some(
+    (member) => member._id.toString() === session?.user?.id
+  );
   const isOwnerOrMember = isOwner || isMember;
   return (
     <StyledMain>
       {!isEditingPlan && (
         <PlanHeader $color={plan.color}>
           <h2>{plan.name}</h2>
+          {plan.members?.length > 0 && (
+            <MemberList>
+              {plan.members.map((member) => (
+                <MemberItem key={member._id}>
+                  <User size={14} />
+                  {member.name}
+                </MemberItem>
+              ))}
+            </MemberList>
+          )}
           <PlanButtons>
             <OutlineButton onClick={() => setIsEditingPlan(true)}>
               Edit
@@ -112,4 +125,22 @@ const TaskList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+`;
+const MemberList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing.xs};
+`;
+const MemberItem = styled.li`
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.muted};
+  background: ${({ theme }) => theme.colors.background};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: 2px 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `;
