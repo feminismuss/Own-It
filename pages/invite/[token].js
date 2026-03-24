@@ -35,6 +35,7 @@ export default function InvitePlanPage() {
       <PlanHeader $color={plan.color}>
         <h2>{plan.name}</h2>
       </PlanHeader>
+      {session && <OutlineButton onClick={handleJoin}>Join Plan</OutlineButton>}
       <TaskList>
         {tasks?.map((task) => (
           <li key={task._id}>
@@ -47,7 +48,7 @@ export default function InvitePlanPage() {
           </li>
         ))}
       </TaskList>
-      {session && <OutlineButton onClick={handleJoin}>Join Plan</OutlineButton>}
+      
       {!session && (
         <Link href={`/login?token=${token}`}>
           Login to join
