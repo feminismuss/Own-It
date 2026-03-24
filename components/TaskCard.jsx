@@ -7,7 +7,7 @@ import {
   StyledButton,
   StyledLink,
 } from "@/styles/sharedStyles";
-import { Circle, CircleDot, CircleCheckBig } from "lucide-react";
+import { Circle, CircleDot, CircleCheckBig, User } from "lucide-react";
 import { deleteTask, updateTask } from "@/services/taskService";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
@@ -25,6 +25,7 @@ export default function TaskCard({
   planColor,
   disableLink,
   isOwnerOrMember,
+  isOwner,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
@@ -59,7 +60,9 @@ export default function TaskCard({
         )}
         <ButtonWrapper>
           {task.assignedTo && (
-            <AssignedTo>👤 {task.assignedTo.name}</AssignedTo>
+            <AssignedTo>
+              <User size={14} /> {task.assignedTo.name}
+            </AssignedTo>
           )}
           {showStatusButton &&
             task.status === "todo" &&
@@ -93,17 +96,21 @@ export default function TaskCard({
         </ButtonWrapper>
       </TitleRow>
       <ButtonGroup>
-        {showEditDelete && task.status !== "todo" && (
+        {showEditDelete && isOwner && task.status !== "todo" && (
           <StyledButton
             onClick={async () => {
-              await updateTask(task._id, { status: "todo" }, task.plan);
+              await updateTask(
+                task._id,
+                { status: "todo", assignedTo: null },
+                task.plan
+              );
               router.back();
             }}
           >
             Reset
           </StyledButton>
         )}
-        {showEditDelete && (
+        {showEditDelete && isOwner && (
           <StyledButton
             onClick={async () => {
               await deleteTask(task._id);
@@ -113,7 +120,7 @@ export default function TaskCard({
             Delete
           </StyledButton>
         )}
-        {showEditDelete && (
+        {showEditDelete && isOwnerOrMember && (
           <StyledButton onClick={() => setIsEditing(true)}>Edit</StyledButton>
         )}
       </ButtonGroup>

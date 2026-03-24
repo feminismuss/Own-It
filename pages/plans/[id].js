@@ -66,12 +66,16 @@ export default function PlanPage() {
             </MemberList>
           )}
           <PlanButtons>
-            <OutlineButton onClick={() => setIsEditingPlan(true)}>
-              Edit
-            </OutlineButton>
-            <OutlineButton onClick={() => handleDelete(plan._id)}>
-              Delete
-            </OutlineButton>
+            {isOwner && (
+              <OutlineButton onClick={() => setIsEditingPlan(true)}>
+                Edit
+              </OutlineButton>
+            )}
+            {isOwner && (
+              <OutlineButton onClick={() => handleDelete(plan._id)}>
+                Delete
+              </OutlineButton>
+            )}
             {isOwner && <InviteLink planId={plan._id} />}
           </PlanButtons>
         </PlanHeader>
@@ -95,6 +99,7 @@ export default function PlanPage() {
               showStatusButton
               planColor={plan.color}
               isOwnerOrMember={isOwnerOrMember}
+              isOwner={isOwner}
             />
           </li>
         ))}
