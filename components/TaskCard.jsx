@@ -24,6 +24,7 @@ export default function TaskCard({
   showEditDelete,
   planColor,
   disableLink,
+  isOwnerOrMember,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
@@ -60,20 +61,23 @@ export default function TaskCard({
           {task.assignedTo && (
             <AssignedTo>👤 {task.assignedTo.name}</AssignedTo>
           )}
-          {showStatusButton && task.status === "todo" && !task.assignedTo && (
-            <StyledButton
-              $variant="start"
-              onClick={() =>
-                updateTask(
-                  task._id,
-                  { status: "inprogress", assignedTo: session.user.id },
-                  task.plan
-                )
-              }
-            >
-              I will do it
-            </StyledButton>
-          )}
+          {showStatusButton &&
+            task.status === "todo" &&
+            !task.assignedTo &&
+            isOwnerOrMember && (
+              <StyledButton
+                $variant="start"
+                onClick={() =>
+                  updateTask(
+                    task._id,
+                    { status: "inprogress", assignedTo: session.user.id },
+                    task.plan
+                  )
+                }
+              >
+                I will do it
+              </StyledButton>
+            )}
           {showStatusButton &&
             task.status === "inprogress" &&
             task.assignedTo?._id.toString() === session.user.id && (

@@ -45,6 +45,8 @@ export default function PlanPage() {
     return <h1>Loading...</h1>;
   }
   const isOwner = plan.owner === session?.user?.id;
+  const isMember = plan.members?.some((memberId) => memberId.toString() === session?.user?.id);
+  const isOwnerOrMember = isOwner || isMember;
   return (
     <StyledMain>
       {!isEditingPlan && (
@@ -75,7 +77,12 @@ export default function PlanPage() {
       <TaskList>
         {tasks?.map((task) => (
           <li key={task._id}>
-            <TaskCard task={task} showStatusButton planColor={plan.color} />
+            <TaskCard
+              task={task}
+              showStatusButton
+              planColor={plan.color}
+              isOwnerOrMember={isOwnerOrMember}
+            />
           </li>
         ))}
       </TaskList>
