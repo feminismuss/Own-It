@@ -10,6 +10,7 @@ import {
 import { Circle, CircleDot, CircleCheckBig } from "lucide-react";
 import { deleteTask, updateTask } from "@/services/taskService";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 const STATUS_CONFIG = {
   todo: { Icon: Circle, text: "To Do" },
@@ -22,11 +23,13 @@ export default function TaskCard({
   showStatusButton,
   showEditDelete,
   planColor,
-  disableLink
+  disableLink,
+  isOwnerOrMember,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const router = useRouter();
   const { Icon, text } = STATUS_CONFIG[task.status];
+  const { data: session } = useSession();
 
   if (isEditing) {
     return (
@@ -47,36 +50,55 @@ export default function TaskCard({
         <StatusBadge aria-label={`Status: ${text}`}>
           <Icon />
         </StatusBadge>
-        {disableLink ? (<Title>{task.title}</Title>) : (<StyledLink href={`/tasks/${task._id}`}>
-          <Title>{task.title}</Title> 
-        </StyledLink>)}
+        {disableLink ? (
+          <Title $done={task.status === "done"}>{task.title}</Title>
+        ) : (
+          <StyledLink href={`/tasks/${task._id}`}>
+            <Title $done={task.status === "done"}>{task.title}</Title>
+          </StyledLink>
+        )}
         <ButtonWrapper>
-          {showStatusButton && task.status === "todo" && (
-            <StyledButton
-              $variant="start"
-              onClick={() =>
-                updateTask(task._id, { status: "inprogress" }, task.plan)
-              }
-            >
-              Start
-            </StyledButton>
+          {task.assignedTo && (
+            <AssignedTo>👤 {task.assignedTo.name}</AssignedTo>
           )}
-          {showStatusButton && task.status === "inprogress" && (
-            <StyledButton
-              $variant="done"
-              onClick={() =>
-                updateTask(task._id, { status: "done" }, task.plan)
-              }
-            >
-              Done
-            </StyledButton>
-          )}
+          {showStatusButton &&
+            task.status === "todo" &&
+            !task.assignedTo &&
+            isOwnerOrMember && (
+              <StyledButton
+                $variant="start"
+                onClick={() =>
+                  updateTask(
+                    task._id,
+                    { status: "inprogress", assignedTo: session.user.id },
+                    task.plan
+                  )
+                }
+              >
+                I will do it
+              </StyledButton>
+            )}
+          {showStatusButton &&
+            task.status === "inprogress" &&
+            task.assignedTo?._id.toString() === session.user.id && (
+              <StyledButton
+                $variant="done"
+                onClick={() =>
+                  updateTask(task._id, { status: "done" }, task.plan)
+                }
+              >
+                Done
+              </StyledButton>
+            )}
         </ButtonWrapper>
       </TitleRow>
       <ButtonGroup>
         {showEditDelete && task.status !== "todo" && (
           <StyledButton
-            onClick={async () => {await updateTask(task._id, { status: "todo" }, task.plan); router.back();}}
+            onClick={async () => {
+              await updateTask(task._id, { status: "todo" }, task.plan);
+              router.back();
+            }}
           >
             Reset
           </StyledButton>
@@ -106,6 +128,12 @@ const Title = styled.p`
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text};
   margin: 0;
+  ${({ $done }) =>
+    $done &&
+    `
+    text-decoration: line-through;
+opacity: 0.5;
+  `}
 `;
 const TitleRow = styled.div`
   display: flex;
@@ -117,5 +145,10 @@ const StatusBadge = styled.div`
   align-items: center;
   gap: ${({ theme }) => theme.spacing.xs};
   font-size: ${({ theme }) => theme.fontSizes.xxl};
+  color: ${({ theme }) => theme.colors.muted};
+`;
+const AssignedTo = styled.p`
+  font-size: ${({ theme }) => theme.fontSizes.md};
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.muted};
 `;

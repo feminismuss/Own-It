@@ -7,7 +7,7 @@ export default async function handler(request, response) {
 
   if (request.method === "GET") {
     try {
-      const plan = await Plan.findById(id);
+      const plan = await Plan.findById(id).populate("members", "name");
       response.status(200).json(plan);
       return;
     } catch (error) {
@@ -48,4 +48,5 @@ export default async function handler(request, response) {
       return;
     }
   }
+  return response.status(405).json({ error: "Method not allowed" });
 }
