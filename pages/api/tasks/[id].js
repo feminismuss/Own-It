@@ -48,4 +48,5 @@ export default async function handler(request, response) {
       return;
     }
   }
+  return response.status(405).json({ error: "Method not allowed" });
 }
