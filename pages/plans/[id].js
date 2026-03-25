@@ -11,7 +11,7 @@ import styled from "styled-components";
 import BackButton from "@/components/BackButton";
 import InviteLink from "@/components/InviteLink";
 import { useSession } from "next-auth/react";
-import { User } from "lucide-react";
+import { Circle, CircleDot, CircleCheckBig, User } from "lucide-react";
 
 export default function PlanPage() {
   const [isEditingPlan, setIsEditingPlan] = useState(false);
@@ -21,6 +21,7 @@ export default function PlanPage() {
     data: plan,
     isLoading,
     error,
+    mutate,
   } = useSWR(id ? `/api/plans/${id}` : null);
   const { data: tasks } = useSWR(id ? `/api/tasks?planId=${id}` : null);
   const { data: session } = useSession();
@@ -34,9 +35,9 @@ export default function PlanPage() {
     router.push("/");
   }
 
-  async function handleUpdate(id, data) {
-    await updatePlan(id, data);
-    router.push("/");
+  async function handleComplete(id) {
+    await updatePlan(id, { isCompleted: true });
+    mutate();
   }
 
   if (error) {
@@ -45,26 +46,51 @@ export default function PlanPage() {
   if (isLoading || !plan) {
     return <h1>Loading...</h1>;
   }
-  const isOwner = plan.owner === session?.user?.id;
+  const isOwner = plan.owner?.toString() === session?.user?.id;
   const isMember = plan.members?.some(
     (member) => member._id.toString() === session?.user?.id
   );
   const isOwnerOrMember = isOwner || isMember;
+  const todoCount = tasks?.filter((task) => task.status === "todo").length;
+  const inProgressCount = tasks?.filter(
+    (task) => task.status === "inprogress"
+  ).length;
+  const doneCount = tasks?.filter((task) => task.status === "done").length;
+
   return (
     <StyledMain>
+      <p>isOwner: {String(isOwner)} | owner: {plan.owner?.toString()} | session: {session?.user?.id}</p>
       {!isEditingPlan && (
         <PlanHeader $color={plan.color}>
           <h2>{plan.name}</h2>
           {plan.members?.length > 0 && (
-            <MemberList>
-              {plan.members.map((member) => (
-                <MemberItem key={member._id}>
-                  <User size={14} />
-                  {member.name}
-                </MemberItem>
-              ))}
-            </MemberList>
+            <>
+              <SectionLabel>Team</SectionLabel>
+              <BadgeList>
+                {plan.members.map((member) => (
+                  <BadgeItem key={member._id}>
+                    <User size={14} />
+                    {member.name}
+                  </BadgeItem>
+                ))}
+              </BadgeList>
+            </>
           )}
+          <SectionLabel $top>Progress</SectionLabel>
+          <BadgeList>
+            <BadgeItem>
+              <Circle size={14} />
+              {todoCount} ToDos
+            </BadgeItem>
+            <BadgeItem>
+              <CircleDot size={14} />
+              {inProgressCount} In Progress
+            </BadgeItem>
+            <BadgeItem>
+              <CircleCheckBig size={14} />
+              {doneCount} Done
+            </BadgeItem>
+          </BadgeList>
           <PlanButtons>
             {isOwner && (
               <OutlineButton onClick={() => setIsEditingPlan(true)}>
@@ -90,13 +116,15 @@ export default function PlanPage() {
           onClose={() => setIsEditingPlan(false)}
         />
       )}
+      {!plan.isCompleted && (
       <TaskForm onSubmit={handleCreate} onClose={() => {}} />
+      )}
       <TaskList>
         {tasks?.map((task) => (
           <li key={task._id}>
             <TaskCard
               task={task}
-              showStatusButton
+              showStatusButton={!plan.isCompleted}
               planColor={plan.color}
               isOwnerOrMember={isOwnerOrMember}
               isOwner={isOwner}
@@ -104,6 +132,11 @@ export default function PlanPage() {
           </li>
         ))}
       </TaskList>
+      {isOwner && !plan.isCompleted && (
+        <OutlineButton onClick={() => handleComplete(plan._id)}>
+          Complete Plan
+        </OutlineButton>
+      )}
       <BackButton />
     </StyledMain>
   );
@@ -131,15 +164,16 @@ const TaskList = styled.ul`
   padding: 0;
   margin: 0;
 `;
-const MemberList = styled.ul`
+const BadgeList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
   display: flex;
   flex-wrap: wrap;
   gap: ${({ theme }) => theme.spacing.xs};
 `;
-const MemberItem = styled.li`
+const BadgeItem = styled.li`
   font-size: ${({ theme }) => theme.fontSizes.sm};
   color: ${({ theme }) => theme.colors.muted};
   background: ${({ theme }) => theme.colors.background};
@@ -148,4 +182,12 @@ const MemberItem = styled.li`
   display: flex;
   align-items: center;
   gap: 4px;
+`;
+const SectionLabel = styled.p`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.muted};
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  ${({ $top }) => $top && `margin-top: 8px;`}
 `;

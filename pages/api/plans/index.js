@@ -12,9 +12,13 @@ export default async function handler(request, response) {
       if (!session) {
         return response.status(401).json({ error: "Not authenticated" });
       }
-      const plans = await Plan.find({ $or: [{owner: session.user.id} , {members: session.user.id}] }).sort({
-        createdAt: -1,
-      });
+      const plans = await Plan.find({
+        $or: [{ owner: session.user.id }, { members: session.user.id }],
+      })
+        .sort({
+          createdAt: -1,
+        })
+        .populate("owner", "name");
       response.status(200).json(plans);
       return;
     } catch (error) {
@@ -40,4 +44,5 @@ export default async function handler(request, response) {
       return;
     }
   }
+  return response.status(405).json({ error: "Method not allowed" });
 }
