@@ -59,7 +59,6 @@ export default function PlanPage() {
 
   return (
     <StyledMain>
-      <p>isOwner: {String(isOwner)} | owner: {plan.owner?.toString()} | session: {session?.user?.id}</p>
       {!isEditingPlan && (
         <PlanHeader $color={plan.color}>
           <h2>{plan.name}</h2>
@@ -117,7 +116,7 @@ export default function PlanPage() {
         />
       )}
       {!plan.isCompleted && (
-      <TaskForm onSubmit={handleCreate} onClose={() => {}} />
+        <TaskForm onSubmit={handleCreate} onClose={() => {}} />
       )}
       <TaskList>
         {tasks?.map((task) => (

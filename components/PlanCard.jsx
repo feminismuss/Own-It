@@ -6,8 +6,8 @@ import { User } from "lucide-react";
 export default function PlanCard({ plan }) {
   return (
     <StyledLink href={`/plans/${plan._id}`}>
-      <Card $color={plan.color}>
-        <Title>{plan.name}</Title>
+      <Card $color={plan.color} $completed={plan.isCompleted}>
+        <Title $completed={plan.isCompleted}>{plan.name}</Title>
         <OwnerName>
           <User size={14} />
           {plan.owner.name}
@@ -22,6 +22,9 @@ const Title = styled.p`
   font-weight: 700;
   color: ${({ theme }) => theme.colors.text};
   margin: 0;
+   ${({ $completed }) => $completed && `
+    text-decoration: line-through;
+  `}
 `;
 const OwnerName = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.sm};

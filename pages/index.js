@@ -13,6 +13,11 @@ export default function Home() {
   if (error) return <div>Fehler beim Laden: {error.message}</div>;
   if (isLoading || !plans) return <h1>Loading...</h1>;
 
+  const sortedPlans = [...(plans || [])].sort((a, b) => {
+    if (a.isCompleted === b.isCompleted) return 0;
+    return a.isCompleted ? 1 : -1;
+  });
+
   return (
     <StyledMain>
       {isCreating ? (
@@ -29,7 +34,7 @@ export default function Home() {
         </OutlineButton>
       )}
       <StyledPlanList>
-        {plans.map((plan) => (
+        {sortedPlans.map((plan) => (
           <li key={plan._id}>
             <PlanCard plan={plan} />
           </li>
