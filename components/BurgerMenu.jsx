@@ -21,6 +21,13 @@ export default function BurgerMenu() {
                 Home
               </MenuLink>
             </li>
+            {session && (
+              <li>
+                <MenuLink href="/profile" onClick={() => setIsOpen(false)}>
+                  Profile
+                </MenuLink>
+              </li>
+            )}
             <li>
               {session ? (
                 <MenuLink
