@@ -14,8 +14,10 @@ export const authOptions = {
       },
       async authorize(credentials) {
         await dbConnect();
-        const user = await User.findOne({ email: credentials.email });
-        if (!user) throw new Error("No user found");
+        const user = await User.findOne({
+          email: credentials.email.toLowerCase(),
+        });
+        if (!user) throw new Error("No user found with this email");
         const isValid = await bcrypt.compare(
           credentials.password,
           user.password
@@ -30,6 +32,7 @@ export const authOptions = {
   },
   pages: {
     signIn: "/login",
+    error: "/login",
   },
   callbacks: {
     async jwt({ token, user }) {

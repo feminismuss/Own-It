@@ -5,12 +5,18 @@ import useSWR from "swr";
 import { createPlan } from "@/services/planService";
 import { useState } from "react";
 import { StyledMain, OutlineButton } from "@/styles/sharedStyles";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const { data: plans, isLoading, error } = useSWR("/api/plans");
   const [isCreating, setIsCreating] = useState(false);
+  const router = useRouter();
 
-  if (error) return <div>Fehler beim Laden: {error.message}</div>;
+ if (error?.error === "Not authenticated") {
+  router.push("/");
+  return null;
+}
+if (error) return <div>Fehler beim Laden</div>;
   if (isLoading || !plans) return <h1>Loading...</h1>;
 
   const sortedPlans = [...(plans || [])].sort((a, b) => {
