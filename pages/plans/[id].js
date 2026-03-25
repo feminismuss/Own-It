@@ -32,7 +32,7 @@ export default function PlanPage() {
 
   async function handleDelete(id) {
     await deletePlan(id);
-    router.push("/");
+    router.push("/home");
   }
 
   async function handleComplete(id) {

@@ -17,7 +17,7 @@ export default function BurgerMenu() {
         <Nav>
           <ul>
             <li>
-              <MenuLink href="/" onClick={() => setIsOpen(false)}>
+              <MenuLink href="/home" onClick={() => setIsOpen(false)}>
                 Home
               </MenuLink>
             </li>

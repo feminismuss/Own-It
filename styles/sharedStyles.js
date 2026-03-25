@@ -51,6 +51,7 @@ export const StyledButton = styled.button`
 `;
 
 export const StyledLink = styled(Link)`
+  color: inherit;
   text-decoration: none;
 `;
 export const OutlineButton = styled.button`
