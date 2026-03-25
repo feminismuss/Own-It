@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { useRouter } from "next/router";
 import BurgerMenu from "./BurgerMenu";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { User } from "lucide-react";
 
 const QUOTES = [
   "Done is better than perfect.",
@@ -21,12 +23,14 @@ export default function Header() {
     () => QUOTES[Math.floor(Math.random() * QUOTES.length)]
   );
   const [isMounted, setIsMounted] = useState(false);
+  const {data: session} = useSession();
 
   return (
     <StyledHeader>
       <BurgerMenu />
       <h1>Own It</h1>
       <Quote suppressHydrationWarning>{!isLanding && quote}</Quote>
+      {session && <LoggedInAs><User size={14} />{session.user.name}</LoggedInAs>}
     </StyledHeader>
   );
 }
@@ -53,4 +57,14 @@ const Quote = styled.p`
   color: ${({ theme }) => theme.colors.muted};
   font-size: ${({ theme }) => theme.fontSizes.xl};
   margin: 0;
+`;
+const LoggedInAs = styled.p`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.muted};
+  position: absolute;
+  top: ${({ theme }) => theme.spacing.sm};
+  right: ${({ theme }) => theme.spacing.md};
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `;

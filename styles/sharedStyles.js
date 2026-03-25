@@ -21,7 +21,12 @@ export const Card = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.sm};
-    border-left: ${({ $color }) => $color ? `6px solid ${$color}` : "none"};
+  border-left: ${({ $color }) => ($color ? `6px solid ${$color}` : "none")};
+  ${({ $completed }) =>
+    $completed &&
+    `
+    opacity: 0.5;
+  `}
 `;
 
 export const ButtonGroup = styled.div`
