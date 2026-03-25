@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, StyledButton } from "@/styles/sharedStyles";
 import styled from "styled-components";
 
-export default function LoginForm({ onSubmit }) {
+export default function LoginForm({ onSubmit, onClear }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,7 +16,7 @@ export default function LoginForm({ onSubmit }) {
         <StyledLabel htmlFor="email">Email:</StyledLabel>
         <StyledInput
           value={email}
-          onChange={(event) => setEmail(event.target.value)}
+          onChange={(event) => {setEmail(event.target.value); onClear?.()}}
           type="email"
           id="email"
           name="email"
@@ -26,7 +26,7 @@ export default function LoginForm({ onSubmit }) {
         <StyledLabel htmlFor="password">Password:</StyledLabel>
         <StyledInput
           value={password}
-          onChange={(event) => setPassword(event.target.value)}
+          onChange={(event) => {setPassword(event.target.value); onClear?.()}}
           type="password"
           id="password"
           name="password"

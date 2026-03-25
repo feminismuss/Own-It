@@ -1,12 +1,14 @@
 import LoginForm from "@/components/LoginForm";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
-import { StyledMain } from "@/styles/sharedStyles";
-import { StyledLink } from "@/styles/sharedStyles";
+import { StyledMain, StyledLink } from "@/styles/sharedStyles";
+import styled from "styled-components";
+import { useState } from "react";
 
 export default function LoginPage() {
   const router = useRouter();
   const { token } = router.query;
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function handleLogin(data) {
     const result = await signIn("credentials", {
@@ -22,13 +24,14 @@ export default function LoginPage() {
         router.push("/home");
       }
     } else {
-      console.error("Login failed");
+      setErrorMessage("Email oder Passwort falsch.");
     }
   }
 
   return (
     <StyledMain>
-      <LoginForm onSubmit={handleLogin} />
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      <LoginForm onSubmit={handleLogin} onClear={() => setErrorMessage("")}/>
       <p>
         Noch kein Account?{" "}
         <StyledLink href="/register">Registrieren</StyledLink>
@@ -36,3 +39,8 @@ export default function LoginPage() {
     </StyledMain>
   );
 }
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  text-align: center;
+`;
