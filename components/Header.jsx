@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { StyledLink } from "@/styles/sharedStyles";
 import { useRouter } from "next/router";
 import BurgerMenu from "./BurgerMenu";
 import { useState, useEffect } from "react";
@@ -28,7 +29,9 @@ export default function Header() {
   return (
     <StyledHeader>
       <BurgerMenu />
+      <StyledLink href="/home">
       <h1>Own It</h1>
+      </StyledLink>
       <Quote suppressHydrationWarning>{!isLanding && quote}</Quote>
       {session && <LoggedInAs><User size={14} />{session.user.name}</LoggedInAs>}
     </StyledHeader>
@@ -55,7 +58,7 @@ const StyledHeader = styled.header`
 `;
 const Quote = styled.p`
   color: ${({ theme }) => theme.colors.muted};
-  font-size: ${({ theme }) => theme.fontSizes.xl};
+  font-size: ${({ theme }) => theme.fontSizes.lg};
   margin: 0;
 `;
 const LoggedInAs = styled.p`

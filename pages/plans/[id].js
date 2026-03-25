@@ -32,7 +32,7 @@ export default function PlanPage() {
 
   async function handleDelete(id) {
     await deletePlan(id);
-    router.push("/");
+    router.push("/home");
   }
 
   async function handleComplete(id) {
@@ -91,7 +91,7 @@ export default function PlanPage() {
             </BadgeItem>
           </BadgeList>
           <PlanButtons>
-            {isOwner && (
+            {isOwner && !plan.isCompleted && (
               <OutlineButton onClick={() => setIsEditingPlan(true)}>
                 Edit
               </OutlineButton>
@@ -101,7 +101,7 @@ export default function PlanPage() {
                 Delete
               </OutlineButton>
             )}
-            {isOwner && <InviteLink planId={plan._id} />}
+            {isOwner && !plan.isCompleted && <InviteLink planId={plan._id} />}
           </PlanButtons>
         </PlanHeader>
       )}

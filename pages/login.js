@@ -19,7 +19,7 @@ export default function LoginPage() {
       if (token) {
         router.push(`/invite/${token}`);
       } else {
-        router.push("/");
+        router.push("/home");
       }
     } else {
       console.error("Login failed");

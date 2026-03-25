@@ -9,13 +9,12 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-const PUBLIC_PAGES = ["/login", "/register"];
+const PUBLIC_PAGES = ["/login", "/register", "/"];
 
 function AuthGuard({ children }) {
-  // ← hier
   const { status } = useSession();
   const router = useRouter();
-
+  
   useEffect(() => {
     if (
       status === "unauthenticated" &&
@@ -25,14 +24,17 @@ function AuthGuard({ children }) {
       router.push("/login");
     }
   }, [status, router]);
-
+  
   return children;
 }
+
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }) {
+  const router = useRouter();
+  const isLanding = router.pathname === "/";
   return (
     <SessionProvider session={session}>
       <SWRConfig
@@ -44,9 +46,10 @@ export default function App({
           <GlobalStyle />
           <AuthGuard>
             <Wrapper>
-              <Header />
+              {!isLanding &&
+              <Header />}
               <Component {...pageProps} />
-              <Footer />
+              {!isLanding && <Footer />}
             </Wrapper>
           </AuthGuard>
         </ThemeProvider>
