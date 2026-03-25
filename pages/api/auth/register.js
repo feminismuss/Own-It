@@ -8,16 +8,17 @@ export default async function handler(request, response) {
   if (request.method === "POST") {
     try {
       const userData = request.body;
-      const existingUser = await User.findOne({ email: userData.email });
+      const existingUser = await User.findOne({ email: userData.email.toLowerCase()});
       if (existingUser) {
         return response.status(400).json({ error: "Email already exists" });
       }
 const hashedPassword = await bcrypt.hash(userData.password, 10);
-      const userToCreate = await User.create({...userData, password: hashedPassword});
+      const userToCreate = await User.create({...userData, email: userData.email.toLowerCase(), password: hashedPassword});
       response.status(201).json(userToCreate);
     } catch (error) {
       response.status(400).json({ error: error.message });
       return;
     }
   }
+    return response.status(405).json({ error: "Method not allowed" });
 }
