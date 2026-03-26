@@ -4,7 +4,7 @@ import TaskCard from "@/components/TaskCard";
 import TaskForm from "@/components/TaskForm";
 import { deletePlan, updatePlan } from "@/services/planService";
 import { createTask } from "@/services/taskService";
-import { StyledMain, OutlineButton } from "@/styles/sharedStyles";
+import { StyledMain, OutlineButton, BadgeList, BadgeItem, SectionLabel } from "@/styles/sharedStyles";
 import PlanForm from "@/components/PlanForm";
 import { useState } from "react";
 import styled from "styled-components";
@@ -162,31 +162,4 @@ const TaskList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-`;
-const BadgeList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spacing.xs};
-`;
-const BadgeItem = styled.li`
-  font-size: ${({ theme }) => theme.fontSizes.sm};
-  color: ${({ theme }) => theme.colors.muted};
-  background: ${({ theme }) => theme.colors.background};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  padding: 2px 8px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`;
-const SectionLabel = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.xs};
-  color: ${({ theme }) => theme.colors.muted};
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0;
-  ${({ $top }) => $top && `margin-top: 8px;`}
 `;
