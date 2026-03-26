@@ -3,7 +3,7 @@ import useSWR from "swr";
 import TaskCard from "@/components/TaskCard";
 import { StyledMain } from "@/styles/sharedStyles";
 import BackButton from "@/components/BackButton";
-import { useSession } from "next-auth/react";
+import { usePlanRole } from "@/hooks/usePlanRole";
 
 export default function TaskPage() {
   const router = useRouter();
@@ -14,8 +14,7 @@ export default function TaskPage() {
     error,
   } = useSWR(id ? `/api/tasks/${id}` : null);
   const { data: plan } = useSWR(task ? `/api/plans/${task.plan}` : null);
-  const { data: session } = useSession();
-
+  const { isOwner, isMember, isOwnerOrMember } = usePlanRole(plan);
   if (error) {
     return <div>Fehler beim Laden: {error.message} (Retry?)</div>;
   }
@@ -23,11 +22,7 @@ export default function TaskPage() {
   if (isLoading || !task || !plan) {
     return <h1>Loading...</h1>;
   }
-  const isOwner = plan.owner === session?.user?.id;
-  const isMember = plan.members?.some(
-    (member) => member._id.toString() === session?.user?.id
-  );
-  const isOwnerOrMember = isOwner || isMember;
+
   return (
     <StyledMain>
       <TaskCard

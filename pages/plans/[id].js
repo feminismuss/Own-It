@@ -10,8 +10,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import BackButton from "@/components/BackButton";
 import InviteLink from "@/components/InviteLink";
-import { useSession } from "next-auth/react";
 import { Circle, CircleDot, CircleCheckBig, User } from "lucide-react";
+import { usePlanRole } from "@/hooks/usePlanRole";
 
 export default function PlanPage() {
   const [isEditingPlan, setIsEditingPlan] = useState(false);
@@ -24,7 +24,7 @@ export default function PlanPage() {
     mutate,
   } = useSWR(id ? `/api/plans/${id}` : null);
   const { data: tasks } = useSWR(id ? `/api/tasks?planId=${id}` : null);
-  const { data: session } = useSession();
+  const { isOwner, isMember, isOwnerOrMember } = usePlanRole(plan);
 
   async function handleCreate(data) {
     await createTask({ ...data, plan: id });
@@ -46,11 +46,6 @@ export default function PlanPage() {
   if (isLoading || !plan) {
     return <h1>Loading...</h1>;
   }
-  const isOwner = plan.owner?.toString() === session?.user?.id;
-  const isMember = plan.members?.some(
-    (member) => member._id.toString() === session?.user?.id
-  );
-  const isOwnerOrMember = isOwner || isMember;
   const todoCount = tasks?.filter((task) => task.status === "todo").length;
   const inProgressCount = tasks?.filter(
     (task) => task.status === "inprogress"
