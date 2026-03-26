@@ -14,7 +14,7 @@ const planSchema = new Schema(
     },
     owner: { type: Schema.Types.ObjectId, ref: "User", required: true },
     members: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    inviteToken: { type: String, unique: true, sparse: true },
+    inviteToken: { type: String, unique: true, sparse: true, default: () => require("crypto").randomBytes(16).toString("hex") },
     isCompleted: { type: Boolean, default: false },
   },
   { timestamps: true }

@@ -1,16 +1,12 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useState } from "react";
 import TaskForm from "./TaskForm";
-import {
-  Card,
-  ButtonGroup,
-  StyledButton,
-  StyledLink,
-} from "@/styles/sharedStyles";
+import { Card, ButtonGroup, StyledButton } from "@/styles/sharedStyles";
 import { Circle, CircleDot, CircleCheckBig, User } from "lucide-react";
 import { deleteTask, updateTask } from "@/services/taskService";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const STATUS_CONFIG = {
   todo: { Icon: Circle, text: "To Do" },
@@ -51,13 +47,9 @@ export default function TaskCard({
         <StatusBadge aria-label={`Status: ${text}`}>
           <Icon />
         </StatusBadge>
-        {disableLink ? (
+        <TaskLink href={`/tasks/${task._id}`} $disabled={disableLink}>
           <Title $done={task.status === "done"}>{task.title}</Title>
-        ) : (
-          <StyledLink href={`/tasks/${task._id}`}>
-            <Title $done={task.status === "done"}>{task.title}</Title>
-          </StyledLink>
-        )}
+        </TaskLink>
         <ButtonWrapper>
           {task.assignedTo && (
             <AssignedTo>
@@ -158,4 +150,14 @@ const AssignedTo = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.md};
   font-weight: 700;
   color: ${({ theme }) => theme.colors.muted};
+`;
+const TaskLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  ${({ $disabled }) =>
+    $disabled &&
+    css`
+      pointer-events: none;
+      cursor: default;
+    `}
 `;

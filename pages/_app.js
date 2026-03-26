@@ -14,7 +14,7 @@ const PUBLIC_PAGES = ["/login", "/register", "/"];
 function AuthGuard({ children }) {
   const { status } = useSession();
   const router = useRouter();
-  
+
   useEffect(() => {
     if (
       status === "unauthenticated" &&
@@ -24,10 +24,9 @@ function AuthGuard({ children }) {
       router.push("/login");
     }
   }, [status, router]);
-  
+
   return children;
 }
-
 
 export default function App({
   Component,
@@ -39,15 +38,20 @@ export default function App({
     <SessionProvider session={session}>
       <SWRConfig
         value={{
-          fetcher: (url) => fetch(url).then((res) => res.json()),
+          fetcher: async (url) => {
+            const res = await fetch(url);
+            if (!res.ok) {
+              throw new Error(res.statusText);
+            }
+            return res.json();
+          },
         }}
       >
         <ThemeProvider theme={theme}>
           <GlobalStyle />
           <AuthGuard>
             <Wrapper>
-              {!isLanding &&
-              <Header />}
+              {!isLanding && <Header />}
               <Component {...pageProps} />
               {!isLanding && <Footer />}
             </Wrapper>

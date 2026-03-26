@@ -6,6 +6,7 @@ import styled from "styled-components";
 import BackButton from "@/components/BackButton";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { usePlanRole } from "@/hooks/usePlanRole";
 
 export default function InvitePlanPage() {
   const router = useRouter();
@@ -19,13 +20,13 @@ export default function InvitePlanPage() {
     plan?._id ? `/api/tasks?planId=${plan._id}` : null
   );
   const { data: session } = useSession();
+  const { isOwnerOrMember } = usePlanRole(plan);
   if (error) {
     return <div>Fehler beim Laden: {error.message} (Retry?)</div>;
   }
   if (isLoading || !plan) {
     return <h1>Loading...</h1>;
   }
-  const isOwner = plan.owner === session?.user?.id;
   async function handleJoin() {
     await fetch(`/api/plans/invite/${token}`, { method: "POST" });
     router.push(`/plans/${plan._id}`);
@@ -43,17 +44,13 @@ export default function InvitePlanPage() {
               task={task}
               showStatusButton={!!session}
               planColor={plan.color}
-              disableLink={!session}
+              disableLink={!isOwnerOrMember}
             />
           </li>
         ))}
       </TaskList>
-      
-      {!session && (
-        <Link href={`/login?token=${token}`}>
-          Login to join
-        </Link>
-      )}
+
+      {!session && <Link href={`/login?token=${token}`}>Login to join</Link>}
       <BackButton />
     </StyledMain>
   );

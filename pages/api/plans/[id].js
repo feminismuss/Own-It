@@ -1,4 +1,5 @@
 import Plan from "@/db/models/Plan";
+import Task from "@/db/models/Task";
 import dbConnect from "@/db/connect";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
@@ -49,7 +50,7 @@ export default async function handler(request, response) {
 
   if (request.method === "DELETE") {
     try {
-        const session = await getServerSession(request, response, authOptions);
+      const session = await getServerSession(request, response, authOptions);
       if (!session) {
         return response.status(401).json({ error: "Not authenticated" });
       }
@@ -65,6 +66,7 @@ export default async function handler(request, response) {
         response.status(404).json({ status: "Plan not found" });
         return;
       }
+      await Task.deleteMany({ plan: id });
       response.status(200).json("Plan deleted");
       return;
     } catch (error) {

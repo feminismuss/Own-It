@@ -4,7 +4,13 @@ import TaskCard from "@/components/TaskCard";
 import TaskForm from "@/components/TaskForm";
 import { deletePlan, updatePlan } from "@/services/planService";
 import { createTask } from "@/services/taskService";
-import { StyledMain, OutlineButton, BadgeList, BadgeItem, SectionLabel } from "@/styles/sharedStyles";
+import {
+  StyledMain,
+  OutlineButton,
+  BadgeList,
+  BadgeItem,
+  SectionLabel,
+} from "@/styles/sharedStyles";
 import PlanForm from "@/components/PlanForm";
 import { useState } from "react";
 import styled from "styled-components";
@@ -96,7 +102,9 @@ export default function PlanPage() {
                 Delete
               </OutlineButton>
             )}
-            {isOwner && !plan.isCompleted && <InviteLink planId={plan._id} />}
+            {isOwner && !plan.isCompleted && (
+              <InviteLink token={plan.inviteToken} />
+            )}
           </PlanButtons>
         </PlanHeader>
       )}
