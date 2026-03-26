@@ -95,3 +95,22 @@ export const SectionLabel = styled.p`
   margin: 0;
   ${({ $top }) => $top && `margin-top: 8px;`}
 `;
+export const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.sm};
+`;
+export const StyledLabel = styled.label`
+  font-size: ${({ theme }) => theme.fontSizes.lg};
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.text};
+`;
+export const StyledInput = styled.input`
+  border: 1.5px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.lg};
+  padding: ${({ theme }) => theme.spacing.md};
+  font-size: ${({ theme }) => theme.fontSizes.md};
+  width: 100%;
+  font-family: inherit;
+  outline: none;
+`;
