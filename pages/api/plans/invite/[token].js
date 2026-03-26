@@ -9,7 +9,7 @@ export default async function handler(request, response) {
 
   if (request.method === "GET") {
     try {
-      const plan = await Plan.findOne({ inviteToken: token });
+      const plan = await Plan.findOne({ inviteToken: token }).populate("members", "name");
       if (!plan) {
         return response.status(404).json({ error: "Plan not found" });
       }

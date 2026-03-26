@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Card, StyledButton } from "@/styles/sharedStyles";
-import styled from "styled-components";
+import { Card, StyledButton, StyledForm, StyledInput, StyledLabel } from "@/styles/sharedStyles";
+
 
 export default function LoginForm({ onSubmit, onClear }) {
   const [email, setEmail] = useState("");
@@ -39,23 +39,3 @@ export default function LoginForm({ onSubmit, onClear }) {
   );
 }
 
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
-`;
-const StyledLabel = styled.label`
-  font-size: ${({ theme }) => theme.fontSizes.lg};
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const StyledInput = styled.input`
-  border: 1.5px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.lg};
-  padding: ${({ theme }) => theme.spacing.md};
-  font-size: ${({ theme }) => theme.fontSizes.md};
-  width: 100%;
-  font-family: inherit;
-  outline: none;
-`;

@@ -1,24 +1,18 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { OutlineButton, StyledButton } from "@/styles/sharedStyles";
+import { OutlineButton } from "@/styles/sharedStyles";
 import { Copy, Check } from "lucide-react";
 
-export default function InviteLink({ planId }) {
-  const [inviteLink, setInviteLink] = useState(null);
+export default function InviteLink({ token }) {
+  const [showLink, setShowLink] = useState(false);
   const [copied, setCopied] = useState(false);
+  const inviteLink = `${window.location.origin}/invite/${token}`;
   useEffect(() => {
     if (!copied) return;
     const id = setTimeout(() => setCopied(false), 2000);
     return () => clearTimeout(id);
   }, [copied]);
 
-  async function generateInviteLink() {
-    const response = await fetch(`/api/plans/${planId}/invite`, {
-      method: "POST",
-    });
-    const data = await response.json();
-    setInviteLink(`${window.location.origin}/invite/${data.token}`);
-  }
   async function copyToClipboard() {
     await navigator.clipboard.writeText(inviteLink);
     setCopied(true);
@@ -26,10 +20,10 @@ export default function InviteLink({ planId }) {
 
   return (
     <>
-      <OutlineButton onClick={generateInviteLink}>
-        Generate Invite Link
+      <OutlineButton onClick={() => setShowLink(true)}>
+        Get Invite Link
       </OutlineButton>
-      {inviteLink && (
+      {showLink && (
         <LinkRow>
           <LinkText>{inviteLink}</LinkText>
           <IconButton onClick={copyToClipboard}>

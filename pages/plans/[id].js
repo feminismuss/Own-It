@@ -4,14 +4,20 @@ import TaskCard from "@/components/TaskCard";
 import TaskForm from "@/components/TaskForm";
 import { deletePlan, updatePlan } from "@/services/planService";
 import { createTask } from "@/services/taskService";
-import { StyledMain, OutlineButton } from "@/styles/sharedStyles";
+import {
+  StyledMain,
+  OutlineButton,
+  BadgeList,
+  BadgeItem,
+  SectionLabel,
+} from "@/styles/sharedStyles";
 import PlanForm from "@/components/PlanForm";
 import { useState } from "react";
 import styled from "styled-components";
 import BackButton from "@/components/BackButton";
 import InviteLink from "@/components/InviteLink";
-import { useSession } from "next-auth/react";
 import { Circle, CircleDot, CircleCheckBig, User } from "lucide-react";
+import { usePlanRole } from "@/hooks/usePlanRole";
 
 export default function PlanPage() {
   const [isEditingPlan, setIsEditingPlan] = useState(false);
@@ -24,7 +30,7 @@ export default function PlanPage() {
     mutate,
   } = useSWR(id ? `/api/plans/${id}` : null);
   const { data: tasks } = useSWR(id ? `/api/tasks?planId=${id}` : null);
-  const { data: session } = useSession();
+  const { isOwner, isMember, isOwnerOrMember } = usePlanRole(plan);
 
   async function handleCreate(data) {
     await createTask({ ...data, plan: id });
@@ -46,11 +52,6 @@ export default function PlanPage() {
   if (isLoading || !plan) {
     return <h1>Loading...</h1>;
   }
-  const isOwner = plan.owner?.toString() === session?.user?.id;
-  const isMember = plan.members?.some(
-    (member) => member._id.toString() === session?.user?.id
-  );
-  const isOwnerOrMember = isOwner || isMember;
   const todoCount = tasks?.filter((task) => task.status === "todo").length;
   const inProgressCount = tasks?.filter(
     (task) => task.status === "inprogress"
@@ -101,7 +102,9 @@ export default function PlanPage() {
                 Delete
               </OutlineButton>
             )}
-            {isOwner && !plan.isCompleted && <InviteLink planId={plan._id} />}
+            {isOwner && !plan.isCompleted && (
+              <InviteLink token={plan.inviteToken} />
+            )}
           </PlanButtons>
         </PlanHeader>
       )}
@@ -162,31 +165,4 @@ const TaskList = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-`;
-const BadgeList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${({ theme }) => theme.spacing.xs};
-`;
-const BadgeItem = styled.li`
-  font-size: ${({ theme }) => theme.fontSizes.sm};
-  color: ${({ theme }) => theme.colors.muted};
-  background: ${({ theme }) => theme.colors.background};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  padding: 2px 8px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`;
-const SectionLabel = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.xs};
-  color: ${({ theme }) => theme.colors.muted};
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0;
-  ${({ $top }) => $top && `margin-top: 8px;`}
 `;
