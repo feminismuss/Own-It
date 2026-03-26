@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { StyledLink } from "@/styles/sharedStyles";
 import { useRouter } from "next/router";
 import BurgerMenu from "./BurgerMenu";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { useSession } from "next-auth/react";
 import { User } from "lucide-react";
 
@@ -23,7 +23,6 @@ export default function Header() {
   const [quote] = useState(
     () => QUOTES[Math.floor(Math.random() * QUOTES.length)]
   );
-  const [isMounted, setIsMounted] = useState(false);
   const {data: session} = useSession();
 
   return (

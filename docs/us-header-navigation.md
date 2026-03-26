@@ -34,7 +34,6 @@
 
 - ✅ **useRouter:** router.pathname für aktive Seite, router.back() für Navigation
 - ✅ **position sticky/fixed:** Header sticky, BackButton fixed
-- ✅ **useEffect + isMounted:** Verhindert Hydration Errors bei client-only Rendering
 - ✅ **Flexbox:** Wrapper Layout mit flex-direction: column für Footer am Ende
 
 ## Zusätzlich eingebaut
